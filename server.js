@@ -13,6 +13,11 @@ var rl = require('readline').createInterface({
 ** Here are to usefull variables
 */
 
+console.log(process.argv);
+
+var start_capital = parseInt(process.argv[2]);
+var capital = start_capital;
+var total_days = parseInt(process.argv[3]);
 var title = [];
 var i = 0;
 var cours = [];
@@ -20,7 +25,7 @@ var cours = [];
 /* Do something on client connection */
 io.on('connection', function() {
 	console.log("New User : Broadcasting !");
-	io.sockets.emit('init', {titles: title, cours: cours});
+	io.sockets.emit('init', {start_capital: start_capital, capital: capital, titles: title, cours: cours});
 });
 
 server.listen(1337, function() {
