@@ -9,7 +9,7 @@ var rl = require('readline').createInterface({
 
 var io = require('socket.io/node_modules/socket.io-client');
 
-client = io.connect('http://'+'localhost'+':'+1337);
+var client = io.connect('http://'+'localhost'+':'+1337);
 
 var startCapital = parseInt(process.argv[2]);
 var currentCapital = startCapital;
@@ -98,7 +98,7 @@ process_throught_file = function() {
 			var obj = {	};
 
 			line.forEach(function (elem, index, array) { obj[index] = parseFloat(elem.replace(',','.').replace(' ','')); });
-			//client.sockets.emit('new_value', {value: obj});
+			client.emit('new_value', {value: obj});
 			cours.push(obj);
 
 			/*  */
