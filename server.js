@@ -17,14 +17,14 @@ var debug = '';
 
 server.listen(1337, function() {
 	io.sockets.emit('debug', 'Server listening on port '+server.address.port);
-	/* Start the process here */
-	//process_throught_file();
 });
 
 /* Do something on client connection */
 io.on('connection', function(socket) {
 	io.sockets.emit('debug', 'Successfully connected.');
 	console.log("New User : Broadcasting !");
+
+	socket.emit('init', {startCapital: startCapital, currentCapital: currentCapital, currentDay: currentDay, totalDay: totalDay, titles: titles, cours: cours});
 
 	socket.on('init', function(obj) {
 		console.log("init :", obj);
@@ -33,11 +33,13 @@ io.on('connection', function(socket) {
 		currentDay = obj.currentDay;
 		totalDay = obj.totalDay;
 		titles = obj.titles;
+		obj.cours = cours;
 		io.sockets.emit('init', obj);
 	})
 
 	socket.on('new_value', function(data) {
-		console.log("data received :", data);
+		//console.log("data received :", data);
+		cours.push(data);
 		io.sockets.emit('new_value', data);
 	})
 

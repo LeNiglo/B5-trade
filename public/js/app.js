@@ -1,9 +1,12 @@
+var chart = null;
+var titles = [];
+var cours = [];
+var day = 1;
+
 (function($) {
 
 	var socket = io.connect('http://localhost:1337');
 
-	var titles = [];
-	var cours = [];
 	socket.on('init', function(data) {
 		console.log("init :", data);
 		titles = data.titles;
@@ -11,22 +14,21 @@
 		$('#currentCapital').text(data.currentCapital);
 		$('#startCapital').text(data.startCapital);
 		var str = '<td></td>'
-		cours.forEach(function (elem, index) {
-			str += '<th scope="col">'+index+'</th>';
-		});
-		$('#trade').find('thead').append(str);
-		titles.forEach(function (elem, index) {
-			var li = '<li>'+elem+'</li>'; 
-			$("#muchTitles").append(li);
-			
-			str = '<th scope="row">'+elem+'</th>';
-			cours.forEach(function (elem) {
-				str += '<td>'+elem[index]+'</td>';
+		
+		if (titles) {
+			titles.forEach(function (elem, index) {
+				$("#trade").find('tbody').append('<tr id="tr-'+index+'"><th scope="row">'+elem+'</th></tr>');
+				$("#muchTitles").append('<li>' + elem + '</li>')
 			});
-			$('#trade').find('tbody').append(str);
-			
-		});
-		chart = $('#trade').visualize({type: 'area', height: 500});
+			$("#trade").find('thead').append("<tr><td></td></tr>");
+
+			chart = $('#trade').visualize({type: 'line', height: 500, width: 800, appendTitle: false, topValue: 200, bottomValue: 0});
+
+			cours.forEach(function (elem, index) {
+				new_value(elem);
+			});
+			refresh();
+		}
 	});
 
 	socket.on('debug', function(data) {
@@ -34,8 +36,27 @@
 	});
 
 	socket.on('new_value', function(data) {
-		console.log("new value :", data);
-		$('#debug').append(JSON.stringify(data)+'<br />');
+		//console.log("new value :", data);
+		console.log(day);
+
+		new_value(data);
 	})
 
 })(jQuery);
+
+var refresh = function() {
+	if (chart) {
+		chart.trigger('visualizeRefresh');
+		console.log("refreshed");
+	}
+}
+
+setInterval(refresh(), 2000);
+
+function new_value(data) {
+	$('#trade').find('thead tr').append('<th scope="col">'+day+'</th>');
+	titles.forEach(function (elem, index) {
+		$("#trade").find('tbody #tr-'+index).append('<td>'+ (data["avg-"+ index] * 100) +'</td>');
+	});
+	day++;
+}
