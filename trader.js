@@ -86,8 +86,8 @@ client.on('connect',function() {
 		rl.on('line', function (cmd) {
 			var line = cmd.split(';');
 			if (current_day == 0) {
-				title = line;
-				client.emit('init', {startCapital: startCapital, currentCapital: currentCapital, totalDay: totalDay, currentDay: currentDay});
+				titles = line;
+				client.emit('init', {titles: titles, startCapital: startCapital, currentCapital: currentCapital, totalDay: totalDay, currentDay: currentDay});
 			} else {
 				var obj = {	};
 
