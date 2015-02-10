@@ -8,8 +8,8 @@
 		console.log(data);
 		titles = data.titles;
 		cours = data.cours;
-		$('#current_capital').text(data.capital);
-		$('#start_capital').text(data.start_capital);
+		$('#current_capital').text(data.currentCapital);
+		$('#start_capital').text(data.startCapital);
 		var str = '<td></td>'
 		cours.forEach(function (elem, index) {
 			str += '<th scope="col">'+index+'</th>';
@@ -32,5 +32,9 @@
 	socket.on('debug', function(data) {
 		$('#debug').append(data+'<br />');
 	});
+
+	socket.on('new_value', function(data) {
+		$('#debug').append(JSON.stringify(data)+'<br />');
+	})
 
 })(jQuery);

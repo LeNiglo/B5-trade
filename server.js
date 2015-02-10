@@ -7,6 +7,8 @@ var io = require('socket.io')(server);
 ** Here are to usefull variables
 */
 
+var startCapital, currentCapital, currentDay, totalDay;
+var titles, cours = [];
 var debug = '';
 
 /*
@@ -22,7 +24,18 @@ server.listen(1337, function() {
 /* Do something on client connection */
 io.on('connection', function() {
 	console.log("New User : Broadcasting !");
-	io.sockets.emit('init', {start_capital: start_capital, capital: capital, titles: title, cours: cours});
+	io.sockets.emit('init', {startCapital: startCapital, currentCapital: currentCapital, titles: titles, cours: cours});
 });
 
-io.on('new_value', )
+io.on('init', function(obj) {
+	startCapital = obj.startCapital;
+	currentCapital = obj.currentCapital;
+	currentDay = obj.currentDay;
+	totalDay = obj.totalDay;
+	titles = obj.titles;
+	server.emit(obj);
+})
+
+io.on('new_value', function(data) {
+	console.log("data received :", data);
+})
