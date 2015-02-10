@@ -22,20 +22,28 @@ server.listen(1337, function() {
 });
 
 /* Do something on client connection */
-io.on('connection', function() {
+io.on('connection', function(socket) {
+	io.sockets.emit('debug', 'Successfully connected.');
 	console.log("New User : Broadcasting !");
-	io.sockets.emit('init', {startCapital: startCapital, currentCapital: currentCapital, titles: titles, cours: cours});
+
+	socket.on('init', function(obj) {
+		console.log("init :", obj);
+		startCapital = obj.startCapital;
+		currentCapital = obj.currentCapital;
+		currentDay = obj.currentDay;
+		totalDay = obj.totalDay;
+		titles = obj.titles;
+		io.sockets.emit('init', obj);
+	})
+
+	socket.on('new_value', function(data) {
+		console.log("data received :", data);
+		io.sockets.emit('new_value', data);
+	})
+
+	socket.on('debug', function(data) {
+		console.log("debug received :", data);
+		io.sockets.emit('debug', data);
+	})
+
 });
-
-io.on('init', function(obj) {
-	startCapital = obj.startCapital;
-	currentCapital = obj.currentCapital;
-	currentDay = obj.currentDay;
-	totalDay = obj.totalDay;
-	titles = obj.titles;
-	server.emit(obj);
-})
-
-io.on('new_value', function(data) {
-	console.log("data received :", data);
-})

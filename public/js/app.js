@@ -5,11 +5,11 @@
 	var titles = [];
 	var cours = [];
 	socket.on('init', function(data) {
-		console.log(data);
+		console.log("init :", data);
 		titles = data.titles;
 		cours = data.cours;
-		$('#current_capital').text(data.currentCapital);
-		$('#start_capital').text(data.startCapital);
+		$('#currentCapital').text(data.currentCapital);
+		$('#startCapital').text(data.startCapital);
 		var str = '<td></td>'
 		cours.forEach(function (elem, index) {
 			str += '<th scope="col">'+index+'</th>';
@@ -17,7 +17,7 @@
 		$('#trade').find('thead').append(str);
 		titles.forEach(function (elem, index) {
 			var li = '<li>'+elem+'</li>'; 
-			$("#much-titles").append(li);
+			$("#muchTitles").append(li);
 			
 			str = '<th scope="row">'+elem+'</th>';
 			cours.forEach(function (elem) {
@@ -34,6 +34,7 @@
 	});
 
 	socket.on('new_value', function(data) {
+		console.log("new value :", data);
 		$('#debug').append(JSON.stringify(data)+'<br />');
 	})
 

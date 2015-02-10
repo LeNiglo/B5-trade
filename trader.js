@@ -9,7 +9,7 @@ var rl = require('readline').createInterface({
 
 var io = require('socket.io/node_modules/socket.io-client');
 
-var client = io.connect('http://'+'localhost'+':'+1337);
+var client = io('http://localhost:1337');
 
 var startCapital = parseInt(process.argv[2]);
 var currentCapital = startCapital;
@@ -113,3 +113,4 @@ process_throught_file = function() {
 client.on('connect',function() {
 	process_throught_file();
 }); 
+
