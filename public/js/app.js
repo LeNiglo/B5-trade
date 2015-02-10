@@ -29,4 +29,8 @@
 		chart = $('#trade').visualize({type: 'area', height: 500});
 	});
 
+	socket.on('debug', function(data) {
+		$('#debug').append(data+'<br />');
+	});
+
 })(jQuery);
