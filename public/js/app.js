@@ -22,7 +22,7 @@ var day = 1;
 			});
 			$("#trade").find('thead').append("<tr><td></td></tr>");
 
-			chart = $('#trade').visualize({type: 'line', height: 500, width: 800, appendTitle: false, topValue: 200, bottomValue: 0});
+			chart = $('#trade').visualize({type: 'line', height: 500, width: 800, appendTitle: false, topValue: 150, bottomValue: 50});
 
 			cours.forEach(function (elem, index) {
 				new_value(elem);

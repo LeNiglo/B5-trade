@@ -13,7 +13,7 @@ var totalDay = parseInt(process.argv[3]);
 var titles = [];
 var cours = [];
 var currentDay = 0;
-var serverOnline = parseInt(process.argv[4]) == 1 ? true : false;
+var serverOnline = true;
 
 if (serverOnline) {
 	var io = require('socket.io/node_modules/socket.io-client');
@@ -26,9 +26,6 @@ function getCours(days) {
 }
 
 function getAverage(cours_index) {
-	if (currentDay <= 1) {
-		return 0.0;
-	}
 	var avg = 0.0;
 	var count = 0;
 	cours.forEach(function (obj) {
@@ -93,13 +90,9 @@ handle_new_value = function() {
 		client.emit('new_value', obj);
 	var debug = "["+currentDay+"]";
 	for (var k in titles) {
-		debug += " {"+titles[k]+": "+obj["avg-"+k]+"}";
+		debug += " {"+titles[k]+": "+obj["real-"+k]+"}";
 	};
 	console.log(debug);
-	if (currentDay > 20) {
-		calcSMA(5);
-		calcWMA(5);
-	}
 }
 
 
@@ -133,8 +126,17 @@ process_throught_file = function() {
 rl.pause();
 if (serverOnline) {
 	client.on('connect', function() {
+		serverOnline = true;
 		process_throught_file();
 	});
-} else {
-	process_throught_file();
+	client.on('error', function() {
+		serverOnline = false;
+		client.close();
+		process_throught_file();
+	});
+	client.on('connect_error', function() {
+		serverOnline = false;
+		client.close();
+		process_throught_file();
+	});
 }
